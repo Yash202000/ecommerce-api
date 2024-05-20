@@ -1,18 +1,20 @@
-// importing required packages
 const express = require('express');
-const bodyParser = require('body-parser');
-const db = require('./config/mongoose');
+const connectDB = require('./config/db.config');
+const productRoutes = require('./routes/product.routes');
 
-// initializing express
 const app = express();
 
-// using body parser to parse over the request body
-app.use(bodyParser.urlencoded({extended: true}));
+// Connect to database
+connectDB();
 
-// using routes
-app.use('/products', require('./routes/products'));
+// Middleware to parse JSON
+app.use(express.json());
 
-// starting the server
-app.listen(3000, function(){
-    console.log('API is live on http://localhost:3000/products');
+// Product routes
+app.use('/products', productRoutes);
+
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
